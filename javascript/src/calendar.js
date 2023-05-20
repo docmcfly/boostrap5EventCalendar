@@ -2,18 +2,18 @@ class Calendar {
 
 
     properties = {
-        maxEventBoxes :15,
+        maxEventBoxes: 15,
         todayBgColor: 'green',
         primaryLightColor: '#d39c8c',
         outOfFocusColor: '#C0C0C0',
-        dayBoxHeight : '6.2em', 
-        texts : {
+        dayBoxHeight: '6.2em',
+        texts: {
             de: {
                 daysOfWeek: ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'],
                 daysOfWeekShort: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'],
                 btnNextButton: 'Nächster Monat',
                 btnPreviousMonth: 'Vorheriger Monat',
-                btnToday: 'Heute',
+                // btnToday: 'Heute',
                 appointmentsOfTheDay: 'Termine des Tages',
                 monthNames: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
             },
@@ -48,11 +48,12 @@ class Calendar {
     }\
     .dateBox{\
     	height: '+ this.properties.dayBoxHeight + '; \
-    	text-overflow: clip;\
+    	text-overflow: ellipsis;\
     	overflow: hidden;\
     }\
     [data-eventbox] {\
     	text-overflow: ellipsis;\
+        overflow: hidden;\
     	margin: 0;\
     }\
     .today{\
@@ -74,25 +75,25 @@ class Calendar {
     constructor(selector, language, properties) {
         this.properties = this.merge(this.properties, properties);
         this.selector = selector
-        this.language = language
+        this.texts = this.merge(this.properties.texts['en'], this.properties.texts[language]);
     }
 
     merge(target, ...sources) {
         for (let source of sources) {
-          for (let k in source) {
-            let vs = source[k], vt = target[k]
-            if (Object(vs) == vs && Object(vt) === vt) {
-              target[k] = this.merge(vt, vs)
-              continue
+            for (let k in source) {
+                let vs = source[k], vt = target[k]
+                if (Object(vs) == vs && Object(vt) === vt) {
+                    target[k] = this.merge(vt, vs)
+                    continue
+                }
+                target[k] = source[k]
             }
-            target[k] = source[k]
-          }
         }
         return target
-      }
+    }
 
     t() {
-        return this.properties.texts[this.language]
+        return this.texts
     }
 
     parseDate(date) {
@@ -106,6 +107,9 @@ class Calendar {
     }
 
     parseMoment(dateTime) {
+        if (dateTime.length == 10) {
+            return this.parseDate(dateTime)
+        }
         let [date, _time] = dateTime.split("T")
         let [year, month, day] = date.split("-")
         let [hour, minute] = _time.split(":")
@@ -331,6 +335,12 @@ class Calendar {
 
         let start = this.parseMoment(event.start)
         let end = this.parseMoment(event.end)
+
+        // end time is specified and it is 0:00 
+        if (event.end.length > 10 && end.getHours() === 0 && end.getMinutes() === 0) {
+            end.setDate(end.getDate() - 1) // display the event only to the day before.
+        }
+
         if (start.getTime() > end.getTime()) {
             return;
         }
@@ -367,6 +377,7 @@ class Calendar {
             }
             eventBox.attr('data-empty', 'false')
             eventBox.attr('data-idx', event.idx)
+            eventBox.attr('title', event.title)
             if (event.preBooked === true) {
                 eventBox.css("background-image", 'repeating-linear-gradient(45deg,transparent 0,transparent .5em, ' + event.backgroundColor + ' .5em, ' + event.backgroundColor + ' 1em, transparent 1em)')
             } else {
