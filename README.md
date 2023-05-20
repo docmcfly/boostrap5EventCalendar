@@ -4,4 +4,4 @@ It is a simple month calendar based on boostrap 5 and this calendar can display 
 
 ## Example
 
-[Simple Example](https://raw.githubusercontent.com/)
+[Simple Example](https://raw.githubusercontent.com/docmcfly/boostrap5EventCalendar/blob/main/example/index.html)
