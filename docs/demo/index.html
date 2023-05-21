@@ -32,10 +32,11 @@
           integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
           crossorigin="anonymous"></script>
         <!-- imports jquery -->
-        <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"
+          integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
         <!-- imports calendar.js -->
         <script src="../../javascript/src/calendar.js"></script>
-        
+
         <p>
           A little bit script code - by example:
         </p>
@@ -45,30 +46,31 @@
   <div id="calendar" defer="defer">Calendar</div>
   <script>
     new Calendar('#calendar', 'en', {
-      todayBgColor: 'pink',
+      todayBgColor: 'pink', // today color is pink
       texts: {
         en: {
-          btnToday: 'Go to today'
+          btnToday: 'Go to today' // change the button text of today
         }
       }
     }).renderCalendar([
       {
-        start: '2023-05-23T11:10',
-        end: '2023-05-27T17:30',
-        title: '🏖️ Hollidays',
-        backgroundColor: 'red',
+        start: '2023-05-23T11:10', // start time of the event
+        end: '2023-05-27T17:30',// end time of the event
+        title: '🏖️ Hollidays', // the title of the event
+        backgroundColor: '#ffcccc',// the background color
       },
       {
         start: '2023-05-15T00:00',
         end: '2023-05-19T00:00',
         title: '🥸 Improtant job.',
-        backgroundColor: 'green',
+        backgroundColor: '#ccffcc',
+        striped: true,
       },
       {
         start: '2023-05-16',
         end: '2023-05-27T17:30',
         title: '🏴‍☠️ Seize world domination',
-        backgroundColor: 'blue',
+        backgroundColor: '#ccccff',
       },
     ]);
   </script>

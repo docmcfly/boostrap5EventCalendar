@@ -273,8 +273,10 @@ class Calendar {
         this.renderEvents()
     }
 
-    idealTextColor(bgColor) {
-
+    idealTextColor(bgColor, striped) {
+        if(striped ===true){
+            return "#000000"
+        }
         var nThreshold = 105;
         var components = this.getRGBComponents(bgColor);
         var bgDelta = (components.R * 0.299) + (components.G * 0.587) + (components.B * 0.114);
@@ -304,19 +306,19 @@ class Calendar {
         let calendar = this
         dateEvents.each(function (i, e) {
             let idx = $(e).attr('data-idx')
-            let start = calendar.parseMoment(calendar.events[idx].start)
-            let end = calendar.parseMoment(calendar.events[idx].end)
-
-            let backgroundColor = calendar.events[idx].backgroundColor
+            let event = calendar.events[idx]
+            let start = calendar.parseMoment(event.start)
+            let end = calendar.parseMoment(event.end)
+            let backgroundColor = event.backgroundColor
             add += '<div class="mb-2 p-1" style="'
-            if (calendar.events[idx].preBooked === true) {
+            if (event.striped === true) {
                 add += 'background-image: repeating-linear-gradient(45deg,transparent 0,transparent .5em, ' + backgroundColor + ' .5em, ' + backgroundColor + ' 1em, transparent 1em) ;'
             } else {
                 add += 'background-color:' + backgroundColor + '; '
             }
-            add += 'color:' + calendar.idealTextColor(backgroundColor) + '; '
+            add += 'color:' + calendar.idealTextColor(backgroundColor, event.striped) + '; '
             add += '">' + "\n"
-            add += calendar.events[idx].title
+            add += event.title
             if(start.getHours() !== 0 || start.getMinutes() !== 0 || end.getHours() !== 0 || end.getMinutes() !== 0){    
                  add += " (" + calendar.formatTime(start) + "&nbsp;-&nbsp;" + calendar.formatTime(end) + ")"
             }
@@ -381,12 +383,12 @@ class Calendar {
             eventBox.attr('data-empty', 'false')
             eventBox.attr('data-idx', event.idx)
             eventBox.attr('title', event.title)
-            if (event.preBooked === true) {
+            if (event.striped === true) {
                 eventBox.css("background-image", 'repeating-linear-gradient(45deg,transparent 0,transparent .5em, ' + event.backgroundColor + ' .5em, ' + event.backgroundColor + ' 1em, transparent 1em)')
             } else {
                 eventBox.css("background-color", event.backgroundColor)
             }
-            eventBox.css("color", this.idealTextColor(event.backgroundColor))
+            eventBox.css("color", this.idealTextColor(event.backgroundColor, event.striped))
             tmp.setDate(tmp.getDate() + 1)
         }
 
