@@ -42,7 +42,7 @@ It is a simple month calendar based on boostrap 5 and this calendar can display 
 #### Parameter:
 * "#calendar"  is the &lt;div> tag selector
 * "en" is the language (Currently english and german are supported.)
-* "{}" can contains additional properties. (by example: you can add a new language or you can change colors.) 
+* "{}" can contain additional properties. (by example: you can add a new language or you can change colors.) 
 * "[]" is an array with your events. 
 
 ### Here is a greater example
@@ -65,9 +65,9 @@ It is a simple month calendar based on boostrap 5 and this calendar can display 
       {
         start: '2023-05-15T00:00',
         end: '2023-05-19T00:00',
-        title: '🥸 Improtant job.',
+        title: '🥸 Important job.',
         backgroundColor: '#ccffcc',
-        striped: true,
+        striped: true, // the background color ist striped
       },
       {
         start: '2023-05-16',
