@@ -1,4 +1,4 @@
-# boostrap5EventCalendar
+# Simple month event calendar (for boostrap 5)
 It is a simple month calendar based on boostrap 5 and this calendar can display events. 
 
 ![Screenshot main view,](docs/imgs/screenshot-main.png)
