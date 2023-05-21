@@ -316,7 +316,10 @@ class Calendar {
             }
             add += 'color:' + calendar.idealTextColor(backgroundColor) + '; '
             add += '">' + "\n"
-            add += calendar.events[idx].title + "( " + calendar.formatTime(start) + " - " + calendar.formatTime(end) + " )"
+            add += calendar.events[idx].title
+            if(start.getHours() !== 0 || start.getMinutes() !== 0 || end.getHours() !== 0 || end.getMinutes() !== 0){    
+                 add += " (" + calendar.formatTime(start) + "&nbsp;-&nbsp;" + calendar.formatTime(end) + ")"
+            }
             add += '</div>' + "\n"
         })
         details.append(add)
