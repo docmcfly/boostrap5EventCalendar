@@ -14,7 +14,7 @@ class Calendar {
                 daysOfWeekShort: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'],
                 btnNextButton: 'Nächster Monat',
                 btnPreviousMonth: 'Vorheriger Monat',
-                // btnToday: 'Heute',
+                btnToday: 'Heute',
                 appointmentsOfTheDay: 'Termine des Tages',
                 monthNames: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
             },
