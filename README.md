@@ -33,6 +33,7 @@ It is a simple month calendar based on boostrap 5 and this calendar can display 
 ```html
 <div id="calendar" defer="defer">Calendar</div>
 ```
+Hint: If you do not know, what does "defer" mean? [Defer](https://www.w3schools.com/tags/att_script_defer.asp) ensures that the script is executed at the end of loading. 
 
 3. Render the calendar
    
