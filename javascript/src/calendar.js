@@ -2,12 +2,23 @@
 class Calendar {
 
 
+
+
+
     properties = {
         maxEventBoxes: 15,
-        todayBgColor: 'green',
+        todayBgColor: '#ded9a1',
         primaryLightColor: '#d39c8c',
         outOfFocusColor: '#C0C0C0',
         dayBoxHeight: '6.2em',
+        formatter: {
+            de: {
+                date: 'j.n.y',
+            },
+            en: {
+                date: 'm/d/y',
+            }
+        },
         texts: {
             de: {
                 daysOfWeek: ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'],
@@ -77,6 +88,7 @@ class Calendar {
         this.properties = this.merge(this.properties, properties);
         this.selector = selector
         this.texts = this.merge(this.properties.texts['en'], this.properties.texts[language]);
+        this.language = language
     }
 
     merge(target, ...sources) {
@@ -97,19 +109,40 @@ class Calendar {
         return this.texts
     }
 
+    hasDateFormat(date) {
+        return (/^\d{4}-[01]\d-[0-3]\d$/gm).test(date);
+    }
+
+    hasTimeFormat(time) {
+        return (/^[0-2]\d:[0-5]\d$/gm).test(time)
+    }
+
+    hasDateTimeFormat(dateTime) {
+        return (/^\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d$/gm).test(dateTime)
+    }
+
     parseDate(date) {
+        if (!this.hasDateFormat(date)) {
+            return null;
+        }
         let [year, month, day] = date.split("-")
         return new Date(year, month - 1, day, 0, 0, 0)
     }
 
     parseTime(time) {
-        let [hour, minute] = _time.split(":")
+        if (!this.hasTimeFormat(time)) {
+            return null;
+        }
+        let [hour, minute] = time.split(":")
         return new Date(1970, 0, 1, hour, minute, 0)
     }
 
     parseMoment(dateTime) {
-        if (dateTime.length == 10) {
+        if (this.hasDateFormat(dateTime)) {
             return this.parseDate(dateTime)
+        }
+        if (!(this.hasDateTimeFormat(dateTime))) {
+            return null;
         }
         let [date, _time] = dateTime.split("T")
         let [year, month, day] = date.split("-")
@@ -134,7 +167,7 @@ class Calendar {
         content += '<div class="container mb-3">' + "\n";
         content += '    <div class="row mb-3 ">' + "\n";
         content += '        <div class="col-md-3 mb-3">' + "\n";
-        content += '            <span class="month-name">month</span>' + "\n";
+        content += '            <span class="month-name fs-1">month</span>' + "\n";
         content += '        </div>' + "\n"
         content += '        <div class="col-md-3 mb-3">' + "\n";
         content += '            <button class="btn btn-primary toToday overflowHidden" style="width:100%">' + this.t().btnToday + '</button>' + "\n";
@@ -167,23 +200,23 @@ class Calendar {
         content += '</div>' + "\n"
         cal.append(content)
 
-        $(this.selector + ' .btn.nextMonth').on('click', { calendar: this }, function (event) {
+        $(this.selector + ' .btn.nextMonth').on('click', {calendar: this}, function (event) {
             let calendar = event.data.calendar
             calendar.currentDay.setMonth(calendar.currentDay.getMonth() + 1)
             calendar.renderMonth()
 
         })
-        $(this.selector + ' .btn.previousMonth').on('click', { calendar: this }, function (event) {
+        $(this.selector + ' .btn.previousMonth').on('click', {calendar: this}, function (event) {
             let calendar = event.data.calendar
             calendar.currentDay.setMonth(calendar.currentDay.getMonth() - 1)
             calendar.renderMonth()
         })
 
-        $(this.selector + ' .btn.toToday').on('click', { calendar: this }, function (event) {
+        $(this.selector + ' .btn.toToday').on('click', {calendar: this}, function (event) {
             let calendar = event.data.calendar
             calendar.currentDay = new Date()
             calendar.renderMonth()
-            $(".today").get(0).scrollIntoView({ behavior: 'smooth' });
+            $(".today").get(0).scrollIntoView({behavior: 'smooth'});
         })
 
         this.renderMonth()
@@ -267,7 +300,7 @@ class Calendar {
         grid += '</div>' + "\n"
         cal.append(grid)
 
-        $(this.selector + ' [data-date]').on('click', { calendar: this }, function (event) {
+        $(this.selector + ' [data-date]').on('click', {calendar: this}, function (event) {
             event.data.calendar.updateDetails($(this))
         })
 
@@ -275,7 +308,7 @@ class Calendar {
     }
 
     idealTextColor(bgColor, striped) {
-        if(striped ===true){
+        if (striped === true) {
             return "#000000"
         }
         var nThreshold = 105;
@@ -310,23 +343,55 @@ class Calendar {
             let event = calendar.events[idx]
             let start = calendar.parseMoment(event.start)
             let end = calendar.parseMoment(event.end)
-            let backgroundColor = event.backgroundColor
-            add += '<div class="mb-2 p-1" style="'
-            if (event.striped === true) {
-                add += 'background-image: repeating-linear-gradient(45deg,transparent 0,transparent .5em, ' + backgroundColor + ' .5em, ' + backgroundColor + ' 1em, transparent 1em) ;'
-            } else {
-                add += 'background-color:' + backgroundColor + '; '
+            if (start !== null && end !== null) {
+
+                let backgroundColor = event.backgroundColor
+                add += '<div class="mb-2 p-1" style="'
+                if (event.striped === true) {
+                    add += 'background-image: repeating-linear-gradient(45deg,transparent 0,transparent .5em, ' + backgroundColor + ' .5em, ' + backgroundColor + ' 1em, transparent 1em) ;'
+                } else {
+                    add += 'background-color:' + backgroundColor + '; '
+                }
+                add += 'color:' + calendar.idealTextColor(backgroundColor, event.striped) + '; '
+                add += '">' + "\n"
+                add += '<span class="fw-bold">' + event.title + '</span>'
+                add += '<div class="small">'
+                if (event.responsible) {
+                    add += event.responsible + '<br>'
+                }
+                if (event.description) {
+                    add += event.description
+                    add += '&nbsp;('
+                }
+                let startDate = calendar.formatDate(start);
+                let endDate = calendar.formatDate(end);
+                if (startDate !== d || endDate !== d
+                    || start.getHours() !== 0 || start.getMinutes() !== 0
+                    || end.getHours() !== 0 || end.getMinutes() !== 0) {
+
+                    if (startDate !== d || (start.getHours() === 0 || start.getMinutes() === 0)) {
+                        add += start.toLocaleDateString(calendar.language) + ' '
+                    }
+                    if (start.getHours() !== 0 || start.getMinutes() !== 0) {
+                        add += calendar.formatTime(start)
+                    }
+                    add += "&nbsp;-&nbsp;"
+                    if (endDate !== d) {
+                        add += end.toLocaleDateString(calendar.language) + ' '
+                    }
+                    if (end.getHours() !== 0 || end.getMinutes() !== 0) {
+                        add += calendar.formatTime(end)
+                    }
+                    if (event.description) {
+                        add += ')'
+                    }
+                }
+                add += '</div>' + "\n"
+                add += '</div>' + "\n"
             }
-            add += 'color:' + calendar.idealTextColor(backgroundColor, event.striped) + '; '
-            add += '">' + "\n"
-            add += event.title
-            if(start.getHours() !== 0 || start.getMinutes() !== 0 || end.getHours() !== 0 || end.getMinutes() !== 0){    
-                 add += " (" + calendar.formatTime(start) + "&nbsp;-&nbsp;" + calendar.formatTime(end) + ")"
-            }
-            add += '</div>' + "\n"
         })
         details.append(add)
-        $(".details").get(0).scrollIntoView({ behavior: 'smooth' });
+        $(".details").get(0).scrollIntoView({behavior: 'smooth'});
     }
 
     renderEvents() {
@@ -342,10 +407,16 @@ class Calendar {
         let start = this.parseMoment(event.start)
         let end = this.parseMoment(event.end)
 
+        if (start === null || end === null) {
+            return;
+        }
+
+
         // end time is specified and it is 0:00 
         if (event.end.length > 10 && end.getHours() === 0 && end.getMinutes() === 0) {
             end.setDate(end.getDate() - 1) // display the event only to the day before.
         }
+
 
         if (start.getTime() > end.getTime()) {
             return;
