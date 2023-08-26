@@ -33,6 +33,7 @@ It is a simple month calendar based on boostrap 5 and this calendar can display 
 ```html
 <div id="calendar" defer="defer">Calendar</div>
 ```
+Hint: If you do not know, what does "defer" mean? [Defer](https://www.w3schools.com/tags/att_script_defer.asp) ensures that the script is executed at the end of loading. 
 
 3. Render the calendar
    
@@ -48,7 +49,7 @@ It is a simple month calendar based on boostrap 5 and this calendar can display 
 ### Here is a greater example
 
 ```js
- new Calendar('#calendar', 'en', {
+  new Calendar('#calendar', 'en', {
       todayBgColor: 'pink', // today color is pink
       texts: {
         en: {
@@ -60,19 +61,25 @@ It is a simple month calendar based on boostrap 5 and this calendar can display 
         start: '2023-05-23T11:10', // start time of the event
         end: '2023-05-27T17:30',// end time of the event
         title: '🏖️ Hollidays', // the title of the event
+        description: 'Tropical island', // a event description
+        responsible: 'Mr. Smith', // who is responsible?
         backgroundColor: '#ffcccc',// the background color
       },
       {
         start: '2023-05-15T00:00',
         end: '2023-05-19T00:00',
-        title: '🥸 Important job.',
+        title: '🥸 Improtant job',
+        description: 'Mow lawn',
+        responsible: 'My daddy',
         backgroundColor: '#ccffcc',
-        striped: true, // the background color ist striped
+        striped: true, // background color is striped?
       },
       {
         start: '2023-05-16',
         end: '2023-05-27T17:30',
         title: '🏴‍☠️ Seize world domination',
+        description: 'Top secret',
+        responsible: 'The pinky and the brain',
         backgroundColor: '#ccccff',
       },
     ]);
