@@ -2,11 +2,16 @@
 It is a simple month calendar based on boostrap 5 and this calendar can display events. 
 
 ![Screenshot main view,](docs/imgs/screenshot-main.png)
-
-
 ## Demo
 
 [Simple demo](https://raw.githack.com/docmcfly/boostrap5EventCalendar/main/docs/demo/index.html)
+
+## An practice example 
+
+I wrote the calendar for another project and tried to make the calendar as universal as possible. The other project is a Typo3 extension for borrowing objects. 
+What you can see is the possibility to download events from other months via AJAX. You can see that here: [cyLending/Resources/Private/Partials/Calendar.html](https://github.com/docmcfly/cyLending/blob/main/Resources/Private/Partials/Calendar.html)
+
+Here is the link to my TYPO3 project: [Typo3 extension for object lending](https://github.com/docmcfly/cyLending).
 
 ## Instructions
 
