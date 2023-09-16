@@ -266,7 +266,7 @@ class Calendar {
         content += '<div class="container mb-3">' + "\n";
         content += '    <div class="row mb-3 ">' + "\n";
         content += '        <div class="col-md-3 mb-3">' + "\n";
-        content += '            <span class="currentMonth fs-1">month</span>' + "\n";
+        content += '            <span class="currentMonth fs-2">month</span>' + "\n";
         content += '        </div>' + "\n"
         content += '        <div class="col-md-3 mb-3">' + "\n";
         content += '            <button class="btn btn-primary toToday overflowHidden" style="width:100%">' + this.t().btnToday + '</button>' + "\n";
