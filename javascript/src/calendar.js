@@ -38,8 +38,34 @@ class Calendar {
             }
         },
 
-        previousMonthButtonHook: function (calendar) {alert(1)},
-        nextMonthButtonHook: function (calendar) {alert(2)},
+        previousMonthButtonHook: function (calendar) {
+            // you can override this function. So you can implements an ajax call. 
+            // An example: see #nextMonthButtonHook(...)
+        },
+        nextMonthButtonHook: function (calendar) {
+            
+
+            // you can override this function. So you can implements an ajax call:
+            /* Here is an example: 
+
+            let previousMonth = calendar.calculateOtherMonth(-1);
+
+            $.ajax({
+                url: [ajaxConnectUrl],
+                method: "POST",
+                data: {year: previousMonth.getFullYear(), month: previousMonth.getMonth() + 1},
+            }
+            )
+                .fail(function (error) {
+                    console.log(error.responseText)
+                })
+                .done(function (result) {
+                    //  console.log(result)
+                    calendar.importEvents(JSON.parse(result))
+                    calendar.renderEvents()
+                })
+            */
+        },
 
         // translations
         texts: {
@@ -155,6 +181,14 @@ class Calendar {
         return this.texts
     }
 
+    calculateAnotherMonth(offset) {
+        let currentMonth = $(selector + ' .currentMonth').attr('data-month')
+        let currentYear = $(selector + ' .currentMonth').attr('data-year')
+
+        let result = new Date(currentYear, currentMonth, 1);
+        return new Date(result.setMonth(result.getMonth() + offset))
+    }
+
     hasDateFormat(date) {
         return (/^\d{4}-[01]\d-[0-3]\d$/gm).test(date);
     }
@@ -266,7 +300,7 @@ class Calendar {
         cal.append(content)
 
         let btnNextMonth = $(this.selector + ' .btn.nextMonth')
-        btnNextMonth.on('click', {calendar: this}, function (event) {
+        btnNextMonth.on('click', { calendar: this }, function (event) {
             let calendar = event.data.calendar
             calendar.properties.nextMonthButtonHook(calendar)
             calendar.currentDay.setMonth(calendar.currentDay.getMonth() + 1)
@@ -274,7 +308,7 @@ class Calendar {
         })
 
         let btnPreviousMonth = $(this.selector + ' .btn.previousMonth')
-        btnPreviousMonth.on('click', {calendar: this}, function (event) {
+        btnPreviousMonth.on('click', { calendar: this }, function (event) {
 
             let calendar = event.data.calendar
             calendar.properties.previousMonthButtonHook(calendar)
@@ -282,11 +316,11 @@ class Calendar {
             calendar.renderMonth()
         })
 
-        $(this.selector + ' .btn.toToday').on('click', {calendar: this}, function (event) {
+        $(this.selector + ' .btn.toToday').on('click', { calendar: this }, function (event) {
             let calendar = event.data.calendar
             calendar.currentDay = new Date()
             calendar.renderMonth()
-            $(".today").get(0).scrollIntoView({behavior: 'smooth'});
+            $(".today").get(0).scrollIntoView({ behavior: 'smooth' });
         })
 
         this.renderMonth()
@@ -416,7 +450,7 @@ class Calendar {
         }
 
 
-        $(this.selector + ' [data-date]').on('click', {calendar: this}, function (event) {
+        $(this.selector + ' [data-date]').on('click', { calendar: this }, function (event) {
             event.data.calendar.updateDetails($(this))
         })
 
@@ -522,7 +556,7 @@ class Calendar {
             }
         }
         details.append(add)
-        $(".details").get(0).scrollIntoView({behavior: 'smooth'});
+        $(".details").get(0).scrollIntoView({ behavior: 'smooth' });
     }
 
     renderEvents() {
@@ -538,13 +572,13 @@ class Calendar {
 
     renderEvent(event) {
 
-        $('[data-eventbox][data-idx='+event.idx+']').each(function(index){
+        $('[data-eventbox][data-idx=' + event.idx + ']').each(function (index) {
             let eb = $(this)
             eb.attr('data-empty', 'true')
             eb.attr('data-idx', '')
             eb.attr('title', '')
             eb.html('<div class="content fs-6 overflowHidden p-0 px-1 m-1 me-2" >&nbsp;</div>')
-        } )
+        })
 
         let start = event.start
         let end = event.end
