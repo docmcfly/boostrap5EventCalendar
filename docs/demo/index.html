@@ -44,40 +44,46 @@
   </div>
   <div id="calendar" defer="defer">Calendar</div>
   <script>
+
+    let currentMonth = (new Date().getMonth() + 1).toString().padStart(2, '0')
     new Calendar('#calendar', 'en', {
       todayBgColor: 'pink', // today color is pink
       texts: {
         en: {
           btnToday: 'Go to today' // change the button text of today
         }
-      }
-    }).renderCalendar([
-      {
-        start: '2023-05-23T11:10', // start time of the event
-        end: '2023-05-27T17:30',// end time of the event
-        title: '🏖️ Hollidays', // the title of the event
-        description: 'Tropical island', // a event description
-        responsible: 'Mr. Smith', // who is responsible?
-        backgroundColor: '#ffcccc',// the background color
       },
-      {
-        start: '2023-05-15T00:00',
-        end: '2023-05-19T00:00',
-        title: '🥸 Improtant job',
-        description: 'Mow lawn',
-        responsible: 'My daddy',
-        backgroundColor: '#ccffcc',
-        striped: true, // background color is striped?
-      },
-      {
-        start: '2023-05-16',
-        end: '2023-05-27T17:30',
-        title: '🏴‍☠️ Seize world domination',
-        description: 'Top secret',
-        responsible: 'The pinky and the brain',
-        backgroundColor: '#ccccff',
-      },
-    ]);
+      maxPastMonth: 3,
+    }).importEvents(
+      [
+        {
+          start: '2023-'+currentMonth+'-23 11:10:00', // start time of the event
+          end: '2023-'+currentMonth+'-27 17:30:00',// end time of the event
+          title: '🏖️ Hollidays', // the title of the event
+          description: 'Tropical island', // a event description
+          responsible: 'Mr. Smith', // who is responsible?
+          backgroundColor: '#ffcccc',// the background color
+        },
+        {
+          start: '2023-'+currentMonth+'-15',
+          end: '2023-'+currentMonth+'-19',
+          title: '🥸 Improtant job',
+          description: 'Mow lawn',
+          responsible: 'My daddy',
+          backgroundColor: '#ccffcc',
+          striped: true, // background color is striped?
+        },
+        {
+          start: '2023-'+currentMonth+'-16',
+          end: '2023-'+currentMonth+'-27 17:30:00',
+          title: '🏴‍☠️ Seize world domination',
+          description: 'Top secret',
+          responsible: 'The pinky and the brain',
+          backgroundColor: '#ccccff',
+        },
+      ]
+    )
+      .renderCalendar();
   </script>
 
 
