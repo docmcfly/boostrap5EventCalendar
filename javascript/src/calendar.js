@@ -310,7 +310,7 @@ class Calendar {
         // 2. set to the first day of the month
         day.setDate(1)
         // 3. subtract from the first month day the week day counter... 
-        day.setDate(day.getDate() - day.getDay() + 1)
+        day.setDate(day.getDate() - (6 - day.getDay()))
 
         // 
         let currentMonth = this.currentDay.getMonth();
@@ -496,8 +496,7 @@ class Calendar {
                     add += event.responsible + '<br>'
                 }
                 if (event.description) {
-                    add += event.description
-                    add += '&nbsp;('
+                    add += event.description + '<br>'
                 }
                 let startDate = this.formatDate(event.start);
                 let endDate = this.formatDate(event.end);
@@ -505,21 +504,18 @@ class Calendar {
                     || event.start.getHours() !== 0 || event.start.getMinutes() !== 0
                     || event.end.getHours() !== 0 || event.end.getMinutes() !== 0) {
 
-                    if (startDate !== d || (event.start.getHours() === 0 || event.start.getMinutes() === 0)) {
+                    if (startDate !== currentDay || (event.start.getHours() === 0 && event.start.getMinutes() === 0)) {
                         add += event.start.toLocaleDateString(this.language, this.properties.formatter.dateOptions) + ' '
                     }
                     if (event.start.getHours() !== 0 || event.start.getMinutes() !== 0) {
                         add += event.start.toLocaleTimeString(this.language, this.properties.formatter.timeOptions)
                     }
                     add += "&nbsp;-&nbsp;"
-                    if (endDate !== d) {
+                    if (endDate !== currentDay) {
                         add += event.end.toLocaleDateString(this.language, this.properties.formatter.dateOptions) + ' '
                     }
                     if (event.end.getHours() !== 0 || event.end.getMinutes() !== 0) {
                         add += event.end.toLocaleTimeString(this.language, this.properties.formatter.timeOptions)
-                    }
-                    if (event.description) {
-                        add += ')'
                     }
                 }
                 add += '</div>' + "\n"
