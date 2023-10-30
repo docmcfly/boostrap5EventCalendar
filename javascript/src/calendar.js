@@ -30,14 +30,14 @@ class Calendar {
 
         // default date formatter
         formatter: {
-            dateOptions: {"year": "numeric", "month": "numeric", "day": "numeric"},
-            timeOptions: {hour: "numeric", minute: "2-digit"},
+            dateOptions: { "year": "numeric", "month": "numeric", "day": "numeric" },
+            timeOptions: { hour: "numeric", minute: "2-digit" },
         },
 
 
 
-        previousMonthButtonHook: function (calendar) {alert(1)},
-        nextMonthButtonHook: function (calendar) {alert(2)},
+        previousMonthButtonHook: function (calendar) { },
+        nextMonthButtonHook: function (calendar) { },
 
         // translations
         texts: {
@@ -264,7 +264,7 @@ class Calendar {
         cal.append(content)
 
         let btnNextMonth = $(this.selector + ' .btn.nextMonth')
-        btnNextMonth.on('click', {calendar: this}, function (event) {
+        btnNextMonth.on('click', { calendar: this }, function (event) {
             let calendar = event.data.calendar
             calendar.properties.nextMonthButtonHook(calendar)
             calendar.currentDay.setMonth(calendar.currentDay.getMonth() + 1)
@@ -272,7 +272,7 @@ class Calendar {
         })
 
         let btnPreviousMonth = $(this.selector + ' .btn.previousMonth')
-        btnPreviousMonth.on('click', {calendar: this}, function (event) {
+        btnPreviousMonth.on('click', { calendar: this }, function (event) {
 
             let calendar = event.data.calendar
             calendar.properties.previousMonthButtonHook(calendar)
@@ -280,11 +280,12 @@ class Calendar {
             calendar.renderMonth()
         })
 
-        $(this.selector + ' .btn.toToday').on('click', {calendar: this}, function (event) {
+        $(this.selector + ' .btn.toToday').on('click', { calendar: this }, function (event) {
             let calendar = event.data.calendar
             calendar.currentDay = new Date()
+            calendar.currentDay = calendar.currentDay.setDate(1)
             calendar.renderMonth()
-            $(".today").get(0).scrollIntoView({behavior: 'smooth'});
+            $(".today").get(0).scrollIntoView({ behavior: 'smooth' });
         })
 
         this.renderMonth()
@@ -310,9 +311,9 @@ class Calendar {
         // 2. set to the first day of the month
         day.setDate(1)
         // 3. subtract from the first month day the week day counter... 
-        day.setDate(day.getDate() - (6 - day.getDay()))
+        day.setDate(day.getDate() - ((day.getDay() + 6) % 7))
 
-        // 
+
         let currentMonth = this.currentDay.getMonth();
         let currentMonthTag = $(this.selector + ' .currentMonth')
         currentMonthTag.text(this.t().monthNames[this.currentDay.getMonth()] + " " + this.currentDay.getFullYear());
@@ -414,7 +415,7 @@ class Calendar {
         }
 
 
-        $(this.selector + ' [data-date]').on('click', {calendar: this}, function (event) {
+        $(this.selector + ' [data-date]').on('click', { calendar: this }, function (event) {
             event.data.calendar.updateDetails($(this))
         })
 
@@ -523,7 +524,7 @@ class Calendar {
             }
         }
         details.append(add)
-        $(".details").get(0).scrollIntoView({behavior: 'smooth'});
+        $(".details").get(0).scrollIntoView({ behavior: 'smooth' });
     }
 
     renderEvents() {
