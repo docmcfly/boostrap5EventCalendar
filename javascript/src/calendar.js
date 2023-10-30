@@ -30,42 +30,14 @@ class Calendar {
 
         // default date formatter
         formatter: {
-            de: {
-                date: 'j.n.y',
-            },
-            en: {
-                date: 'm/d/y',
-            }
+            dateOptions: {"year": "numeric", "month": "numeric", "day": "numeric"},
+            timeOptions: {hour: "numeric", minute: "2-digit"},
         },
 
-        previousMonthButtonHook: function (calendar) {
-            // you can override this function. So you can implements an ajax call. 
-            // An example: see #nextMonthButtonHook(...)
-        },
-        nextMonthButtonHook: function (calendar) {
-            
 
-            // you can override this function. So you can implements an ajax call:
-            /* Here is an example: 
 
-            let previousMonth = calendar.calculateOtherMonth(-1);
-
-            $.ajax({
-                url: [ajaxConnectUrl],
-                method: "POST",
-                data: {year: previousMonth.getFullYear(), month: previousMonth.getMonth() + 1},
-            }
-            )
-                .fail(function (error) {
-                    console.log(error.responseText)
-                })
-                .done(function (result) {
-                    //  console.log(result)
-                    calendar.importEvents(JSON.parse(result))
-                    calendar.renderEvents()
-                })
-            */
-        },
+        previousMonthButtonHook: function (calendar) {alert(1)},
+        nextMonthButtonHook: function (calendar) {alert(2)},
 
         // translations
         texts: {
@@ -181,14 +153,6 @@ class Calendar {
         return this.texts
     }
 
-    calculateAnotherMonth(offset) {
-        let currentMonth = $(selector + ' .currentMonth').attr('data-month')
-        let currentYear = $(selector + ' .currentMonth').attr('data-year')
-
-        let result = new Date(currentYear, currentMonth, 1);
-        return new Date(result.setMonth(result.getMonth() + offset))
-    }
-
     hasDateFormat(date) {
         return (/^\d{4}-[01]\d-[0-3]\d$/gm).test(date);
     }
@@ -266,7 +230,7 @@ class Calendar {
         content += '<div class="container mb-3">' + "\n";
         content += '    <div class="row mb-3 ">' + "\n";
         content += '        <div class="col-md-3 mb-3">' + "\n";
-        content += '            <span class="currentMonth fs-2">month</span>' + "\n";
+        content += '            <span class="currentMonth fs-1">month</span>' + "\n";
         content += '        </div>' + "\n"
         content += '        <div class="col-md-3 mb-3">' + "\n";
         content += '            <button class="btn btn-primary toToday overflowHidden" style="width:100%">' + this.t().btnToday + '</button>' + "\n";
@@ -300,7 +264,7 @@ class Calendar {
         cal.append(content)
 
         let btnNextMonth = $(this.selector + ' .btn.nextMonth')
-        btnNextMonth.on('click', { calendar: this }, function (event) {
+        btnNextMonth.on('click', {calendar: this}, function (event) {
             let calendar = event.data.calendar
             calendar.properties.nextMonthButtonHook(calendar)
             calendar.currentDay.setMonth(calendar.currentDay.getMonth() + 1)
@@ -308,7 +272,7 @@ class Calendar {
         })
 
         let btnPreviousMonth = $(this.selector + ' .btn.previousMonth')
-        btnPreviousMonth.on('click', { calendar: this }, function (event) {
+        btnPreviousMonth.on('click', {calendar: this}, function (event) {
 
             let calendar = event.data.calendar
             calendar.properties.previousMonthButtonHook(calendar)
@@ -316,11 +280,11 @@ class Calendar {
             calendar.renderMonth()
         })
 
-        $(this.selector + ' .btn.toToday').on('click', { calendar: this }, function (event) {
+        $(this.selector + ' .btn.toToday').on('click', {calendar: this}, function (event) {
             let calendar = event.data.calendar
             calendar.currentDay = new Date()
             calendar.renderMonth()
-            $(".today").get(0).scrollIntoView({ behavior: 'smooth' });
+            $(".today").get(0).scrollIntoView({behavior: 'smooth'});
         })
 
         this.renderMonth()
@@ -346,7 +310,7 @@ class Calendar {
         // 2. set to the first day of the month
         day.setDate(1)
         // 3. subtract from the first month day the week day counter... 
-        day.setDate(day.getDate() - day.getDay() + 1)
+        day.setDate(day.getDate() - (6 - day.getDay()))
 
         // 
         let currentMonth = this.currentDay.getMonth();
@@ -450,7 +414,7 @@ class Calendar {
         }
 
 
-        $(this.selector + ' [data-date]').on('click', { calendar: this }, function (event) {
+        $(this.selector + ' [data-date]').on('click', {calendar: this}, function (event) {
             event.data.calendar.updateDetails($(this))
         })
 
@@ -496,12 +460,19 @@ class Calendar {
             + (event.description ? (' | ' + event.description) : '')
             + (event.responsible ? (' | ' + event.responsible) : '')
             + ' | '
-            + event.start.toLocaleDateString(this.contains.language) + ' - ' + event.end.toLocaleDateString(this.language)
+            + event.start.toLocaleDateString(this.language, this.properties.formatter.dateOptions)
+            + ' '
+            + event.start.toLocaleTimeString(this.language, this.properties.formatter.timeOptions)
+            + ' - '
+            + event.end.toLocaleDateString(this.language, this.properties.formatter.dateOptions)
+            + ' '
+            + event.end.toLocaleTimeString(this.language, this.properties.formatter.timeOptions)
     }
 
     updateDetails(obj) {
         let d = obj.attr('data-date')
         let day = this.parseDate(d)
+        let currentDay = this.formatDate(day);;
         let details = $(this.selector + ' .details')
         details.empty()
         let add = '<h3 class="p-2" >' + day.toLocaleDateString(this.language) + '</h3>' + "\n"
@@ -525,30 +496,26 @@ class Calendar {
                     add += event.responsible + '<br>'
                 }
                 if (event.description) {
-                    add += event.description
-                    add += '&nbsp;('
+                    add += event.description + '<br>'
                 }
                 let startDate = this.formatDate(event.start);
                 let endDate = this.formatDate(event.end);
-                if (startDate !== d || endDate !== d
+                if (startDate !== currentDay || endDate !== currentDay
                     || event.start.getHours() !== 0 || event.start.getMinutes() !== 0
                     || event.end.getHours() !== 0 || event.end.getMinutes() !== 0) {
 
-                    if (startDate !== d || (event.start.getHours() === 0 || event.start.getMinutes() === 0)) {
-                        add += event.start.toLocaleDateString(this.language) + ' '
+                    if (startDate !== currentDay || (event.start.getHours() === 0 && event.start.getMinutes() === 0)) {
+                        add += event.start.toLocaleDateString(this.language, this.properties.formatter.dateOptions) + ' '
                     }
                     if (event.start.getHours() !== 0 || event.start.getMinutes() !== 0) {
-                        add += this.formatTime(event.start)
+                        add += event.start.toLocaleTimeString(this.language, this.properties.formatter.timeOptions)
                     }
                     add += "&nbsp;-&nbsp;"
-                    if (endDate !== d) {
-                        add += event.end.toLocaleDateString(this.language) + ' '
+                    if (endDate !== currentDay) {
+                        add += event.end.toLocaleDateString(this.language, this.properties.formatter.dateOptions) + ' '
                     }
                     if (event.end.getHours() !== 0 || event.end.getMinutes() !== 0) {
-                        add += this.formatTime(event.end)
-                    }
-                    if (event.description) {
-                        add += ')'
+                        add += event.end.toLocaleTimeString(this.language, this.properties.formatter.timeOptions)
                     }
                 }
                 add += '</div>' + "\n"
@@ -556,7 +523,7 @@ class Calendar {
             }
         }
         details.append(add)
-        $(".details").get(0).scrollIntoView({ behavior: 'smooth' });
+        $(".details").get(0).scrollIntoView({behavior: 'smooth'});
     }
 
     renderEvents() {
