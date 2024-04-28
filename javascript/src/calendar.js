@@ -30,14 +30,14 @@ class Calendar {
 
         // default date formatter
         formatter: {
-            dateOptions: { "year": "numeric", "month": "numeric", "day": "numeric" },
-            timeOptions: { hour: "numeric", minute: "2-digit" },
+            dateOptions: {"year": "numeric", "month": "numeric", "day": "numeric"},
+            timeOptions: {hour: "numeric", minute: "2-digit"},
         },
 
 
 
-        previousMonthButtonHook: function (calendar) { },
-        nextMonthButtonHook: function (calendar) { },
+        previousMonthButtonHook: function (calendar) {},
+        nextMonthButtonHook: function (calendar) {},
 
         // translations
         texts: {
@@ -87,6 +87,7 @@ class Calendar {
     	text-overflow: ellipsis;\
         overflow: hidden;\
     	margin: 0;\
+    	margin-bottom: 1px;\
     }\
     .today{\
     	background-color: '+ this.properties.todayBgColor + ';\
@@ -264,7 +265,7 @@ class Calendar {
         cal.append(content)
 
         let btnNextMonth = $(this.selector + ' .btn.nextMonth')
-        btnNextMonth.on('click', { calendar: this }, function (event) {
+        btnNextMonth.on('click', {calendar: this}, function (event) {
             let calendar = event.data.calendar
             calendar.properties.nextMonthButtonHook(calendar)
             calendar.currentDay.setMonth(calendar.currentDay.getMonth() + 1)
@@ -272,7 +273,7 @@ class Calendar {
         })
 
         let btnPreviousMonth = $(this.selector + ' .btn.previousMonth')
-        btnPreviousMonth.on('click', { calendar: this }, function (event) {
+        btnPreviousMonth.on('click', {calendar: this}, function (event) {
 
             let calendar = event.data.calendar
             calendar.properties.previousMonthButtonHook(calendar)
@@ -280,12 +281,14 @@ class Calendar {
             calendar.renderMonth()
         })
 
-        $(this.selector + ' .btn.toToday').on('click', { calendar: this }, function (event) {
+        $(this.selector + ' .btn.toToday').on('click', {calendar: this}, function (event) {
             let calendar = event.data.calendar
             calendar.currentDay = new Date()
-            calendar.currentDay = calendar.currentDay.setDate(1)
+            calendar.currentDay.setDate(1)
             calendar.renderMonth()
-            $(".today").get(0).scrollIntoView({ behavior: 'smooth' });
+            let today = $(".today").get(0)
+            today.scrollIntoView({behavior: 'smooth'})
+            calendar.updateDetails($(today.parentElement))
         })
 
         this.renderMonth()
@@ -415,7 +418,7 @@ class Calendar {
         }
 
 
-        $(this.selector + ' [data-date]').on('click', { calendar: this }, function (event) {
+        $(this.selector + ' [data-date]').on('click', {calendar: this}, function (event) {
             event.data.calendar.updateDetails($(this))
         })
 
@@ -524,7 +527,7 @@ class Calendar {
             }
         }
         details.append(add)
-        $(".details").get(0).scrollIntoView({ behavior: 'smooth' });
+        $(".details").get(0).scrollIntoView({behavior: 'smooth'});
     }
 
     renderEvents() {
