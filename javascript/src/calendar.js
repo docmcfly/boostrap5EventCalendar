@@ -28,12 +28,17 @@ class Calendar {
         // how many month you can switch in the future. (it exists no limit if the value less as one)
         maxFutureMonth: 12,
 
+        monthSelectorsReference: function (calendar) { calendar.today },
+
         // default date formatter
         formatter: {
             dateOptions: { "year": "numeric", "month": "numeric", "day": "numeric" },
             timeOptions: { hour: "numeric", minute: "2-digit" },
         },
+        // start default for the current day
+        currentDay: new Date(),
 
+        // Sets which relative reference the month-selection buttons use (e.g., 'today' or the given start date).
         updateMonthButtonHook: function (calendar, offset) { },
 
         // translations
@@ -105,7 +110,7 @@ class Calendar {
     }
 
     today = new Date()
-    currentDay = new Date();
+    currentDay = null;
     monthStartDate = null;
     monthEndDate = null;
     events = new Map()
@@ -115,6 +120,7 @@ class Calendar {
         this.selector = selector
         this.texts = this.merge(this.properties.texts['en'], this.properties.texts[language]);
         this.language = language
+        this.currentDay = new Date(this.properties.currentDay)
         $(selector).data('calendar', this)
         $(selector).addClass('calendar')
     }
@@ -149,11 +155,21 @@ class Calendar {
         return this
     }
 
+    removeTags(html) {
+        let div = document.createElement('div');
+        div.innerHTML = html;
+        return div.textContent || div.innerText || '';
+    }
+
     merge(target, ...sources) {
         for (let source of sources) {
             for (let k in source) {
                 let vs = source[k]
                 let vt = target[k]
+                if (vs instanceof Date) {
+                    target[k] = new Date(vs.getTime())
+                    continue
+                }
                 if (Object(vs) == vs && Object(vt) === vt && !(vs instanceof Function) && !(vt instanceof Function)) {
                     target[k] = this.merge(vt, vs)
                     continue
@@ -444,18 +460,18 @@ class Calendar {
         let currentMonthDate = new Date(this.currentDay)
         currentMonthDate.setDate(15)
 
-        if (this.properties.maxPastMonth > 0) {
-            let maxPastMonth = new Date();
-            maxPastMonth.setDate(20);
+        if (this.properties.maxPastMonth > -1) {
+            let maxPastMonth = new Date(this.properties.monthSelectorsReference(this))
+            maxPastMonth.setDate(20)
             maxPastMonth.setMonth(maxPastMonth.getMonth() - this.properties.maxPastMonth)
             this.updateButton($(this.selector + ' .btn.previousMonth'), maxPastMonth < currentMonthDate)
         } else {
             this.updateButton($(this.selector + ' .btn.previousMonth'), true)
         }
 
-        if (this.properties.maxFutureMonth > 0) {
-            let maxFutureMonth = new Date();
-            maxFutureMonth.setDate(10);
+        if (this.properties.maxFutureMonth > -1) {
+            let maxFutureMonth = new Date(this.properties.monthSelectorsReference(this))
+            maxFutureMonth.setDate(10)
             maxFutureMonth.setMonth(maxFutureMonth.getMonth() + this.properties.maxFutureMonth)
             this.updateButton($(this.selector + ' .btn.nextMonth'), currentMonthDate < maxFutureMonth)
         } else {
@@ -505,9 +521,9 @@ class Calendar {
     }
 
     createTooltip(event) {
-        return event.title
-            + (event.description ? (' | ' + event.description) : '')
-            + (event.responsible ? (' | ' + event.responsible) : '')
+        return this.removeTags(event.title)
+            + (event.description ? (' | ' + this.removeTags(event.description)) : '')
+            + (event.responsible ? (' | ' + this.removeTags(event.responsible)) : '')
             + ' | '
             + event.start.toLocaleDateString(this.language, this.properties.formatter.dateOptions)
             + ' '
@@ -671,7 +687,9 @@ class Calendar {
             eventBox.attr('data-empty', 'false')
             eventBox.attr('data-idx', event.idx)
             eventBox.attr('title', this.createTooltip(event))
-            if (event.striped === true) {
+            if (event.cssClass) {
+                eventBox.addClass(event.cssClass)
+            } else if (event.striped === true) {
                 eventBox.css("background-image", this.getStripedBackground(event.backgroundColor))
             } else {
                 eventBox.css("background-color", event.backgroundColor)
