@@ -106,6 +106,13 @@ class Calendar {
     .content {\
         color: var(--bs-black);\
     }\
+    .container.details[data-date]  p {\
+        margin-bottom: 0;\
+    }\
+    .container.details[data-date]  hr {\
+        margin-top: 0.2em;\
+        margin-bottom: 0.2em;\
+    }\
     '
     }
 
@@ -539,6 +546,10 @@ class Calendar {
         this.updateDetails(details.attr('data-date'))
     }
 
+    hasText(s) {
+        return !!s && typeof s === 'string' && s.trim().length > 0;
+    }
+
     updateDetails(d) {
         if (this.hasDateFormat(d)) {
             let day = this.parseDate(d)
@@ -561,14 +572,15 @@ class Calendar {
                     }
                     //  add += 'color:' + this.idealTextColor(backgroundColor, event.striped) + ';'
                     add += '">' + "\n"
-                    add += '<div style="hyphens: auto;" class="fw-bold px-1 bg-white me-5" >' + event.title + '</div>'
-                    add += '<div style="hyphens: auto;" class="small overflowHidden  px-1 bg-white me-5">'
-                    if (event.responsible) {
-                        add += event.responsible + '<br>'
+                    add += '<div style="hyphens: auto;" class="fw-bold px-0" '
+                    add += 'style="'
+                    if (event.striped === true) {
+                        add += 'background-image: ' + this.getStripedBackground(backgroundColor) + ';'
+                    } else {
+                        add += 'background-color:' + backgroundColor + ';'
                     }
-                    if (event.description) {
-                        add += event.description + '<br>'
-                    }
+                    add += '" ><div class="bg-white mb-1 mx-0 p-2">' + event.title + '</div></div>'
+                    add += '<div style="hyphens: auto;" class="small overflowHidden p-2 bg-white ">'
                     let startDate = this.formatDate(event.start);
                     let endDate = this.formatDate(event.end);
                     if (startDate !== currentDay || endDate !== currentDay
@@ -587,6 +599,19 @@ class Calendar {
                         }
                         if (event.end.getHours() !== 0 || event.end.getMinutes() !== 0) {
                             add += event.end.toLocaleTimeString(this.language, this.properties.formatter.timeOptions)
+                        }
+                    }
+                    add += '<hr>'
+                    if (this.hasText(event.responsible)) {
+                        add += event.responsible
+                        if (!event.responsible.endsWith('</p>')) {
+                            add += '<br>'
+                        }
+                    }
+                    if (this.hasText(event.description)) {
+                        add += event.description
+                        if (!event.description.endsWith('</p>')) {
+                            add += '<br>'
                         }
                     }
                     add += '</div>' + "\n"
@@ -712,7 +737,3 @@ class Calendar {
     }
 
 }
-
-
-
-
