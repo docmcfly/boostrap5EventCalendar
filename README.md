@@ -4,6 +4,7 @@ It is a simple month calendar based on boostrap 5 and this calendar can display 
 
 ## Change log
 
+* 1.4.1 :: FIX :: Fix monthSelectorsReference method.
 * 1.4.0 :: UPD :: Update the details layout.
 * 1.3.0 :: UPD :: You can set the initial start date.
 * 1.2.0 :: UPD :: You can set how many months you can navigate backward or froward.
