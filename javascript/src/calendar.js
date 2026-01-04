@@ -19,7 +19,7 @@ class Calendar {
         // font color of the weekend days
         weekendColor: 'var(--bs-primary)',
 
-        // is the 
+        // is the appointment symbol
         appointmentSymbol: ' 🕗',
 
         // how many month you can switch in the past. (it exists no limit if the value less as one)
@@ -28,7 +28,7 @@ class Calendar {
         // how many month you can switch in the future. (it exists no limit if the value less as one)
         maxFutureMonth: 12,
 
-        monthSelectorsReference: function (calendar) { calendar.today },
+        monthSelectorsReference: function (calendar) { return calendar.today },
 
         // default date formatter
         formatter: {
