@@ -4,6 +4,7 @@ It is a simple month calendar based on boostrap 5 and this calendar can display 
 
 ## Change log
 
+* 1.5.1 :: FIX :: The calendar can display open-ended events correctly.
 * 1.5.0 :: UPD :: Update the details layout.
 * 1.4.1 :: FIX :: Fix monthSelectorsReference method.
 * 1.4.0 :: UPD :: Update the details layout.
@@ -17,7 +18,7 @@ It is a simple month calendar based on boostrap 5 and this calendar can display 
 
 [Simple demo](https://raw.githack.com/docmcfly/boostrap5EventCalendar/main/docs/demo/index.html)
 
-## An practice example 
+## An practice example
 
 I wrote the calendar for another project and tried to make the calendar as universal as possible. The other project is a Typo3 extension for borrowing objects.
 What you can see is the possibility to download events from other months via AJAX. You can see that here: [cyLending/Resources/Private/Partials/Calendar.html](https://github.com/docmcfly/cyLending/blob/main/Resources/Private/Partials/Calendar.html)
