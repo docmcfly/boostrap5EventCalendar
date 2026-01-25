@@ -4,6 +4,7 @@ It is a simple month calendar based on boostrap 5 and this calendar can display 
 
 ## Change log
 
+* 1.6.0 :: UPD :: Add an appointment counter.
 * 1.5.1 :: FIX :: The calendar can display open-ended events correctly.
 * 1.5.0 :: UPD :: Update the details layout.
 * 1.4.1 :: FIX :: Fix monthSelectorsReference method.
