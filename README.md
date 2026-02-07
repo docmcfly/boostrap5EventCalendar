@@ -4,6 +4,7 @@ It is a simple month calendar based on boostrap 5 and this calendar can display 
 
 ## Change log
 
+* 1.7.0 :: UPD :: The calendar supports canceled events and the event coloring is adjusted.
 * 1.6.0 :: UPD :: Add an appointment counter.
 * 1.5.1 :: FIX :: The calendar can display open-ended events correctly.
 * 1.5.0 :: UPD :: Update the details layout.
